@@ -6,7 +6,7 @@
 /*   By: gdupont <gdupont@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/11 13:00:33 by user42            #+#    #+#             */
-/*   Updated: 2021/01/19 11:45:34 by gdupont          ###   ########.fr       */
+/*   Updated: 2021/03/08 13:28:05 by gdupont          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int		exit_builtin(t_list *args, t_env *env)
 {
+	int value;
+	
 	if (args && args->next)
 	{
 		ft_error("exit\n", "minishell: exit: too many arguments", 131, env);
@@ -28,11 +30,13 @@ int		exit_builtin(t_list *args, t_env *env)
 		return (0);
 	}
 	else if (args)
-		errno = ft_atoi(args->content);
+		value = ft_atoi(args->content);
 	else
-		errno = 0;
-	if (errno < 0)
-		errno += 256;
-	errno %= 256;
+		value = 0;
+	if (value < 0)
+		value += 256;
+	value %= 256;
+	free(env->content);
+	env->content = ft_itoa(value);
 	return (0);
 }

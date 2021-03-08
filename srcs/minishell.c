@@ -6,7 +6,7 @@
 /*   By: gdupont <gdupont@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/25 11:40:34 by frchaban          #+#    #+#             */
-/*   Updated: 2021/01/19 11:37:10 by gdupont          ###   ########.fr       */
+/*   Updated: 2021/03/08 13:23:21 by gdupont          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ void	launcher(int *status, char **line, t_env *envir)
 	ft_free_2dim(semicolon_split);
 }
 
-void	minishell(int status, t_env *envir)
+int		minishell(int status, t_env *envir)
 {
 	char	*line;
+	int		result_command;
 
 	while (status)
 	{
@@ -69,11 +70,11 @@ void	minishell(int status, t_env *envir)
 		check_hashtag(line);
 		g_print_prompt = 1;
 		launcher(&status, &line, envir);
-		free(envir->content);
-		envir->content = ft_itoa(errno);
 		free(line);
 	}
+	result_command = ft_atoi(envir->content);
 	free_all_list(envir);
+	return(result_command);
 }
 
 int		main(int argc, char **argv, char **env)
@@ -92,6 +93,5 @@ int		main(int argc, char **argv, char **env)
 	g_print_prompt = 1;
 	g_ctrl_backslash = 0;
 	signal(SIGQUIT, signal_ctrl_back_nothing);
-	minishell(status, envir);
-	return (errno);
+	return (minishell(status, envir));
 }
